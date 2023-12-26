@@ -1,5 +1,4 @@
 import time
-import GUI
 # from main import runGUI
 class VendingMachine:
     # defining the states
@@ -94,31 +93,31 @@ class VendingMachine:
         print("Machine refilled.")
         time.sleep(1)
 
-    def insert_amount(self):  # user inserts coin into machine
+    def insert_amount(self,coin):  # user inserts coin into machine
         if not self.transition(self.WAITING_STATE):
             return
 
             # processing coin input
-        while True:
-            try:
-                coin = input("Please insert money into the machine (5$, 10$, 20$, 50$, 100$).") #eltextbox
+        # while True:
+        #     try:
+                # coin = input("Please insert money into the machine (5$, 10$, 20$, 50$, 100$).") #eltextbox
 
-            except:
-                print("Please insert a valid coin.")
-                continue
+            # except:
+            #     print("Please insert a valid coin.")
+            #     continue
 
-            if coin not in self.VALID_AMOUNTS:
-                print("Please insert a valid coin.")
-                continue
+        if coin not in self.VALID_AMOUNTS:
+            print("Please insert a valid coin.")
+            # continue
 
-            else:
-                self.balance += self.VALID_AMOUNTS[coin]
-                break
+        else:
+            self.balance += self.VALID_AMOUNTS[coin]
+            # break
 
         print("Coin inserted. Your balance is " + str(self.balance) + "$")
 
 
-    def make_selection(self):
+    def make_selection(self,selected_item):
         # user selects item from machine
 
         # checking if user has inserted money
@@ -131,41 +130,38 @@ class VendingMachine:
         self.show_items()
 
         # processing item input
-        selected_item = None
-        while True:
-            try:
-                selected_item = str(input("Please enter the name of your selected item."))  #elradiobutton
 
-                if selected_item not in self.items:
-                    print("Please select a valid item.")
-                    continue
+        #selected_item = str(input("Please enter the name of your selected item."))  #elradiobutton
 
-                price = self.items[selected_item]['price']
-                quantity = self.items[selected_item]['quantity']
+        if selected_item not in self.items:
+            print("Please select a valid item.")
 
-                if self.balance < price:
 
-                    print("You have not inserted enough coins to purchase this item. \
-                        This item costs " + str(price) + "$ ,You have inserted " + str(self.balance) + "$")
-                    return
-                if quantity == 0:
-                    print("Please select an item that is in stock.")
-                    continue
-                else:
-                    break
-            except ValueError:
-                print("Please select a valid item.")
-                continue
+        price = self.items[selected_item]['price']
+        quantity = self.items[selected_item]['quantity']
 
+        if self.balance < price:
+
+            print("You have not inserted enough coins to purchase this item. \
+                This item costs " + str(price) + "$ ,You have inserted " + str(self.balance) + "$")
+            return
+
+        if quantity == 0:
+            print("Please select an item that is in stock.")
+            return
         # dispensing item and getting change
         self.dispense(selected_item)
         time.sleep(1)
         self.process_change(selected_item)
 
     def calc_change(self, selected_item):  # calculates change amount based on price of item and current balance
+        # if selected_item == None:
+        #     return self.balance
+
         price = self.items[selected_item]['price']
         if self.balance < price:
             return self.balance
+
         return self.balance - price
 
     def process_change(self, selected_item):  # gives change, resets balance
@@ -181,6 +177,7 @@ class VendingMachine:
 
         print("Your transaction is complete.")
         self.transition(self.IDLE_STATE)
+
 
     def dispense(self, selected_item):  # gives item to user, updates count of items in machine
         if not self.transition(self.DISPENSING_STATE):
@@ -199,16 +196,20 @@ class VendingMachine:
 
 
     def cancel(self):
+        my_change=0
         # cancels transaction, gets any money in machine
         if self.balance != 0:
             if not self.transition(self.GETTINGCHANGE_STATE):
                 return
 
             time.sleep(1)
-            print("Returned " + str(self.balance) + "dollars.")
+            print("Returned " + str(self.balance) + " dollars.")
+            # my_change = self.balance ############
             self.balance = 0
         else:
             print("No money to return.")
         time.sleep(1)
 
         self.transition(self.IDLE_STATE)
+
+
