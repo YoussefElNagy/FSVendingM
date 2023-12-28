@@ -4,27 +4,26 @@ from PIL import Image, ImageTk
 import GUI
 from tkinter import *
 from tkinter import ttk
+import sys
 
-#def get_my_state():
-    #mylabel5.config(text=vending_machine.get_current_state())
+
 def insert_amount_handler():
     my_amount = myinput1.get()
     vending_machine.insert_amount(my_amount)
-    # get_my_state()
     # print(my_amount)
+
 
 def make_selection_handler():
     vending_machine.make_selection(str(mygroup.get()))
-    #get_my_state()
+
 
 def refill_button_handler():
     vending_machine.refill()
-    #get_my_state()
 
-def cancelhandler():
+
+def cancellationhandler():
     vending_machine.cancel()
-    # mylabel4.config(text=str(vending_machine.cancel())+'$')
-    #myinput2.config(0,vending_machine.calc_change())
+
 def create_state_diagram():
     nfa = VisualNFA(
         states={"Idle", "Waiting", "Refunding", "Dispensing"},
@@ -40,12 +39,11 @@ def create_state_diagram():
         initial_state="Idle",
         final_states={"Idle"},
     )
-    nfa.show_diagram(filename='FSM1', format_type="png", path="FSMs", view=False)
+    nfa.show_diagram(filename='Digraph', format_type="png", path="test-graphs", view=False)
     # photo1 = ImageTk.PhotoImage(Image.open('test-graphs/Digraph.png'))
     # photo1.show()
 
 if __name__ == '__main__':
-
     vending_machine = VendingMachine()
     vending_machine.refill()
 
@@ -65,13 +63,10 @@ if __name__ == '__main__':
     mylabel3 = Label(root, text="Change: ")
     mylabel3.grid(row=2, column=0, padx=10, pady=10, sticky=E)
 
-    #myinput2 = Entry(root, width=20)  # change=textbox2
-    #myinput2.grid(row=2, column=1, padx=10, pady=10)
+    # myinput2 = Entry(root, width=20)  # change=textbox2
+    # myinput2.grid(row=2, column=1, padx=10, pady=10)
     mylabel4 = Label(root)
     mylabel4.grid(row=2, column=3, padx=10, pady=10, sticky=E)
-
-   # mylabel5 = Label(root, text=vending_machine.get_current_state())
-   # mylabel5.grid(row=2, column=2, padx=10, pady=10)
 
     select_label = Label(root, text="Select an Item:")
     select_label.grid(row=3, column=0, padx=10, pady=10)
@@ -101,14 +96,32 @@ if __name__ == '__main__':
     refill_button = Button(root, text="Refill", command=refill_button_handler)
     refill_button.grid(row=6, column=1, padx=10, pady=10)
 
-    cancel_button = Button(root, text="Cancel", command=cancelhandler)
+    cancel_button = Button(root, text="Cancel", command=cancellationhandler)
     cancel_button.grid(row=6, column=2, padx=10, pady=10)
 
     insert_button = Button(root, text="Insert", command=insert_amount_handler)
     insert_button.grid(row=1, column=2, padx=10, pady=10)
 
 
-    root.mainloop()
-    #create_state_diagram()
+    class IORedirector(object):
+        def __init__(self, text_area):
+            self.text_area = text_area
 
+        def write(self, str):
+            self.text_area.insert(END, str)
+            self.text_area.see(END)  # Scroll to the end
+
+        def flush(self):
+            pass
+
+
+    text_area = Text(root, height=4, width=50)
+    text_area.grid(row=9, column=0, columnspan=3)
+
+    sys.stdout = IORedirector(text_area)
+
+    root.geometry("650x600")
+
+    root.mainloop()
+# create_state_diagram()
 
