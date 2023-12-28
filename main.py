@@ -115,7 +115,7 @@ if __name__ == '__main__':
             pass
 
 
-    text_area = Text(root, height=4, width=50)
+    text_area = Text(root, height=10, width=70)
     text_area.grid(row=9, column=0, columnspan=3)
 
     sys.stdout = IORedirector(text_area)
