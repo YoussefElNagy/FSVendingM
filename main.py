@@ -5,50 +5,26 @@ import GUI
 from tkinter import *
 from tkinter import ttk
 
+#def get_my_state():
+    #mylabel5.config(text=vending_machine.get_current_state())
 def insert_amount_handler():
     my_amount = myinput1.get()
     vending_machine.insert_amount(my_amount)
+    # get_my_state()
     # print(my_amount)
 
 def make_selection_handler():
     vending_machine.make_selection(str(mygroup.get()))
-
+    #get_my_state()
 
 def refill_button_handler():
     vending_machine.refill()
+    #get_my_state()
 
-# def cancelhandler():
-    # vending_machine.cancel()
+def cancelhandler():
+    vending_machine.cancel()
     # mylabel4.config(text=str(vending_machine.cancel())+'$')
     #myinput2.config(0,vending_machine.calc_change())
-
-# def calc_changehandler():
-#     vending_machine.calc_change()
-def input_action(machine: VendingMachine):
-    while True:
-        print("Possible actions:")
-        print("1. Refill\n2. Insert Coin\n3. Make Selection\n4. Cancel\n5. Quit\n")
-        print("Current State: " + machine.state)
-        try:
-            action = int(input("What action would you like to take? (Enter the number): "))
-
-            if action < 1 or action > 5:
-                print("Please enter a valid choice(1-5)")
-                continue
-
-            if action == 1:
-                machine.refill()
-            elif action == 2:
-                machine.insert_amount()
-            elif action == 3:
-                machine.make_selection()
-            elif action == 4:
-                machine.cancel()
-            elif action == 5:
-                break
-
-        except ValueError:
-            print("Please enter a valid choice (1-4)")
 def create_state_diagram():
     nfa = VisualNFA(
         states={"Idle", "Waiting", "Refunding", "Dispensing"},
@@ -64,7 +40,7 @@ def create_state_diagram():
         initial_state="Idle",
         final_states={"Idle"},
     )
-    nfa.show_diagram(filename='Digraph', format_type="png", path="test-graphs", view=False)
+    nfa.show_diagram(filename='FSM1', format_type="png", path="FSMs", view=False)
     # photo1 = ImageTk.PhotoImage(Image.open('test-graphs/Digraph.png'))
     # photo1.show()
 
@@ -94,6 +70,8 @@ if __name__ == '__main__':
     mylabel4 = Label(root)
     mylabel4.grid(row=2, column=3, padx=10, pady=10, sticky=E)
 
+   # mylabel5 = Label(root, text=vending_machine.get_current_state())
+   # mylabel5.grid(row=2, column=2, padx=10, pady=10)
 
     select_label = Label(root, text="Select an Item:")
     select_label.grid(row=3, column=0, padx=10, pady=10)
@@ -123,13 +101,14 @@ if __name__ == '__main__':
     refill_button = Button(root, text="Refill", command=refill_button_handler)
     refill_button.grid(row=6, column=1, padx=10, pady=10)
 
-    cancel_button = Button(root, text="Cancel")
+    cancel_button = Button(root, text="Cancel", command=cancelhandler)
     cancel_button.grid(row=6, column=2, padx=10, pady=10)
 
     insert_button = Button(root, text="Insert", command=insert_amount_handler)
     insert_button.grid(row=1, column=2, padx=10, pady=10)
 
+
     root.mainloop()
-   # create_state_diagram()
-   # input_action(vending_machine)
+    #create_state_diagram()
+
 
