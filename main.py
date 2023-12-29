@@ -1,7 +1,6 @@
 from Vending_Machine import VendingMachine
 from visual_automata.fa.nfa import VisualNFA
 from PIL import Image, ImageTk
-import GUI
 from tkinter import *
 from tkinter import ttk
 import sys
